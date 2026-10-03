@@ -1,0 +1,19 @@
+# Byte-exactness rules for this repository.
+#
+# Order matters: the LAST matching line wins, so the general rule comes first and
+# the byte-exact exception comes last.
+#
+# Text is stored and checked out as LF on every platform. Without this, a Windows
+# clone (core.autocrlf=true) would materialize CRLF in the working copy, and the
+# tests that read src/ files as text — and the build's own output — would then
+# differ between machines.
+* text=auto eol=lf
+
+# The vendored tree is hashed (tools/vendor-skills.ts, vendor/PROVENANCE.json) and
+# listed file-by-file with its sha256 in THIRD-PARTY-NOTICES.md, where
+# tools/verify-notices.mjs --check fails if those bytes change.
+# vendor/whalechan-image-character/references/reference-catalog.json carries CRLF,
+# written that way by the upstream Python tool that produced it, and the recorded
+# digest covers exactly those bytes. So this subtree is declared "never touch my
+# bytes": no normalization on commit, no conversion on checkout, on any platform.
+vendor/** -text -eol

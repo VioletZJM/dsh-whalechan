@@ -1,0 +1,12 @@
+{
+  "covers": "per vendored skill: every file under assets/, plus references/reference-catalog.json, excluding __pycache__ and *.pyc; for each file in sorted posix-path order, \"<path>\\0<sha256 of contents>\\n\" is fed to sha256",
+  "vendors": {
+    "whalechan-image-character": {
+      "source": "../dsh-whalechan/.dsh/skills/whalechan-image-character",
+      "files": 16,
+      "bytes": 1464597,
+      "digest": "8e9a018d50ab2220c0140048ce50f00f225a6e4b08bf1be7cbb0c722bc7e6ac4"
+    }
+  },
+  "digest": "490863ea1862c79d28790e8acb0862c5551f6ac5e7974144d468e430e3574b90"
+}

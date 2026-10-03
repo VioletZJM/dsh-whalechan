@@ -1,0 +1,56 @@
+{
+  "schema_version": 4,
+  "confirmation": { "confirmed": true, "confirmed_at": "2026-10-02T00:00:00+00:00" },
+  "input": { "type": "text", "content": "a test request", "focus": null },
+  "run_name": "dsh-port-test",
+  "image_count": 1,
+  "images": [
+    {
+      "name": "gentle_wave",
+      "subject": "one Whale-chan",
+      "expression": "gentle closed-eye smile",
+      "action": "holds a white rice bowl with both hands",
+      "composition": "front view, full body centered",
+      "props": ["white rice bowl", "wooden chopsticks"],
+      "objects": [],
+      "style": { "mode": "canonical", "description": "canonical clean rounded cel-shaded Whale-chan style" },
+      "costume": { "mode": "canonical", "description": "canonical navy-and-white ornate maid outfit" },
+      "background": { "mode": "solid", "description": "warm ivory-beige #F5EADD" },
+      "text": null,
+      "proportion": {
+        "mode": "preset",
+        "preset": "semi-chibi",
+        "target_head_ratio": 2.8,
+        "acceptance_range": [2.689, 2.989],
+        "proportion_reference": "assets/reference-images/semi-chibi/0092_enduring_release_delay_rendered_isolated.webp"
+      },
+      "references": [
+        {
+          "id": "canonical-identity",
+          "path": "assets/reference-images/semi-chibi/0092_enduring_release_delay_rendered_isolated.webp",
+          "roles": ["identity", "style", "costume", "proportion"],
+          "instruction": "Canonical Whale-chan identity anchor"
+        }
+      ],
+      "output": {
+        "format": "png",
+        "aspect_ratio": "1:1",
+        "alpha": false,
+        "resolution": { "mode": "provider-native", "width": null, "height": null }
+      },
+      "counterpart": null
+    }
+  ],
+  "execution": {
+    "mode": "sequential",
+    "requested_parallelism": 1,
+    "max_parallelism": 5,
+    "commit_strategy": "coordinator-serial"
+  },
+  "budget": {
+    "per_image_candidates": 8,
+    "per_provider_candidates": 2,
+    "run_candidates": 8,
+    "confirmed_over_24": false
+  }
+}

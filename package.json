@@ -1,0 +1,62 @@
+{
+  "name": "dsh-whalechan",
+  "version": "0.5.0",
+  "description": "DeepSeek Harness plugin: draw identity-locked Whale-chan illustrations from a plain description, with the prompt and the cost shown before anything is spent.",
+  "type": "module",
+  "author": "Ming (VioletZJM)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VioletZJM/dsh-whalechan.git"
+  },
+  "bugs": {
+    "url": "https://github.com/VioletZJM/dsh-whalechan/issues"
+  },
+  "homepage": "https://github.com/VioletZJM/dsh-whalechan#readme",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "files": [
+    "lib",
+    "src",
+    "vendor",
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE",
+    "LICENSE-CC-BY-NC-SA-4.0.md",
+    "THIRD-PARTY-NOTICES.md"
+  ],
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "node --test \"test/**/*.test.ts\"",
+    "build": "tsdown",
+    "verify:bundle": "node tools/verify-bundle.mjs",
+    "verify:install": "node tools/verify-install.mjs",
+    "verify:notices": "node tools/verify-notices.mjs --check",
+    "check:exports": "node tools/dead-exports.mjs --check",
+    "vendor": "node tools/vendor-skills.ts",
+    "vendor:check": "node tools/vendor-skills.ts --check",
+    "prepack": "node tools/clean-pycache.mjs"
+  },
+  "dependencies": {
+    "@deepseek-ai/schemastery": "^3.18.4"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "*",
+    "@deepseek-ai/dsh-tools": "*"
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "^4.0.4",
+    "@deepseek-ai/dsh-tools": "0.2.0-rc.2",
+    "@types/node": "^22.20.0",
+    "tsdown": "0.22.2",
+    "typescript": "~5.7.2"
+  },
+  "license": "SEE LICENSE IN LICENSE"
+}

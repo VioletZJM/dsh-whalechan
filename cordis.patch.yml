@@ -1,0 +1,6 @@
+# dsh-whalechan bundle patch: inserts the plugin row into the profile roster.
+# The row is a bare plugin by package name; the plugin contract is
+# name / inject / Config / apply (no client half until Phase 4).
+- insert:
+    - id: whalechan
+      name: dsh-whalechan
