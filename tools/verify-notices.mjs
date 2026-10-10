@@ -17,7 +17,8 @@
  * published at all:
  *   - the layered licence files exist and actually say what they claim;
  *   - the mandatory attributions (upstream, the two named third-party creators,
- *     the runtime dependency, the non-official disclaimer) are present;
+ *     the runtime dependency, the non-official disclaimer) are present, together
+ *     with the authorization record and the scope caveat upstream attaches to it;
  *   - the package no longer declares itself private.
  *
  * Usage:
@@ -87,9 +88,11 @@ function generated() {
     '| --- | ---: | --- |',
     ...rows,
     '',
-    `整树摘要（\`vendor/PROVENANCE.json\` 记录的口径）：\`${record.digest}\``,
+    `本 vendor 树的摘要（口径见 \`vendor/PROVENANCE.json\` 的 \`covers\`；路径相对本树根）：\`${record.digest}\``,
     '',
-    `上游对应位置：\`skills/${record.source.split('/').pop()}/\`（源头 \`${record.source}\`）。`,
+    `\`vendor/PROVENANCE.json\` 自身的摘要（对上面这些记录再哈希一次，动任何一处都会变）：\`${provenance.digest}\``,
+    '',
+    `上游对应位置：\`skills/${record.source.split('/').pop()}/\`（本机冻结来源：\`${record.source}\`）。`,
     END,
   ].join('\n')
 }
@@ -113,6 +116,11 @@ const REQUIRED = [
   ['the non-official disclaimer', '不是 DeepSeek 官方项目'],
   ['the non-commercial warning', '不得用于商业用途'],
   ['the CC BY-NC-SA licence', 'CC BY-NC-SA 4.0'],
+  // The authorization is pinned by link, so it cannot be quietly dropped or
+  // restated as something wider than what upstream actually recorded.
+  ['the upstream authorization record', 'issues/3#issuecomment-6040420103'],
+  ['the upstream licence-change record', 'ea972d7'],
+  ['the image-scope caveat, in upstream\'s own words', 'not a blanket grant of third-party rights'],
 ]
 
 function main() {
@@ -122,7 +130,7 @@ function main() {
   check(mit.includes('Permission is hereby granted'), 'LICENSE does not contain the MIT grant')
   check(
     mit.includes('vendor/') && mit.includes('character.ts'),
-    'LICENSE must name what MIT does NOT cover (the vendored tree and the ported compiler)',
+    'LICENSE must name what MIT does NOT cover (the vendored tree and the specification-derived compiler)',
   )
   const cc = readOr(join(ROOT, 'LICENSE-CC-BY-NC-SA-4.0.md'))
   check(cc.includes('CC BY-NC-SA 4.0'), 'LICENSE-CC-BY-NC-SA-4.0.md does not name its licence')
@@ -164,7 +172,8 @@ function main() {
   const files = filesUnder(VENDOR)
   process.stdout.write(
     `notices verification passed\n`
-      + `  licence     LICENSE (MIT, original code only) + LICENSE-CC-BY-NC-SA-4.0.md\n`
+      + `  licence     LICENSE (MIT: our code plus the MIT-licensed upstream constants) + LICENSE-CC-BY-NC-SA-4.0.md\n`
+      + `  scope       the images are outside upstream's grants; the caveat and the authorization link are pinned\n`
       + `  attributable ${REQUIRED.length} mandatory names present, ${files.length} redistributed files listed\n`
       + `  block       ${checkOnly ? 'matches vendor/ exactly' : 'regenerated in place'}\n`
       + `  package     not private, no single-SPDX claim, licenses shipped\n`,

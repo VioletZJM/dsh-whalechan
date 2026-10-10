@@ -8,10 +8,11 @@ DeepSeek Harness 插件：**说一句场景，画一张鲸鱼娘**。
 
 > **非官方项目。** 这是社区作品，不是 DeepSeek 官方产物；"DeepSeek" 及相关名称归其各自权利人所有。
 >
-> **分层许可，且不得商用。** 本插件原创代码是 MIT；`vendor/` 里再分发的 16 个上游文件，以及由上游
-> 规范派生的 prompt 编译器，是 **CC BY-NC-SA 4.0**。详见 [`LICENSE`](LICENSE)、
-> [`LICENSE-CC-BY-NC-SA-4.0.md`](LICENSE-CC-BY-NC-SA-4.0.md) 与
-> [`THIRD-PARTY-NOTICES.md`](THIRD-PARTY-NOTICES.md)（后者含再分发文件的逐文件 sha256）。
+> **分层许可，且不得商用。** 本插件原创代码是 MIT；`reference-catalog.json` 与由上游规范派生的
+> prompt 编译器是 **CC BY-NC-SA 4.0**；而那 **15 张参考图不在上游任何 blanket 授权之内** —— 上游
+> 自己的声明明确把图片排除在 MIT 与 CC 之外。三者依据不同，分别写在
+> [`THIRD-PARTY-NOTICES.md`](THIRD-PARTY-NOTICES.md) §1（含逐文件 sha256），许可正文见
+> [`LICENSE`](LICENSE) 与 [`LICENSE-CC-BY-NC-SA-4.0.md`](LICENSE-CC-BY-NC-SA-4.0.md)。
 
 ---
 
@@ -149,12 +150,12 @@ pnpm verify:install desktop     # 需要先把这个插件装进 desktop profile
 | 闸门 | 它证明什么 | 期望 |
 | --- | --- | --- |
 | `typecheck` | 类型是全的 | 退出码 0 |
-| `test` | 单元测试 + 与上游 Python oracle 的差分 | 有上游脚本时 `196 tests / 196 pass / 0 fail`；没有时**差分那部分干净跳过，不会有失败** |
+| `test` | 单元测试 + 与移植来源 Python 实现的差分 | 有那份 Python 时 `196 tests / 196 pass / 0 fail`；没有时**差分那部分干净跳过，不会有失败** |
 | `verify:bundle` | **打包产物**能挂载、干跑能编译、且不含退役代码 | `bundle verification passed` |
 | `check:exports` | 没有「写了但没接上」的导出 | `8 unplugged, all explained` |
 | `vendor:check` | 冻结的参考图与目录没被动过 | `vendor: provenance matches` |
 | `verify:notices` | **再分发面与声明一致**：16 个上游文件逐个列在 NOTICES 里、必署名的 9 个名字都在、许可文件存在、包不再声明 private | `notices verification passed` |
-| `verify:install` | **装进 profile 的那一份**就是过闸门的这一份，且它解析到宿主自己的框架副本 | `install verification passed` |
+| `verify:install` | **装进 profile 的那一份**就是过闸门的这一份，且它**不会解析到自己的框架副本**。框架包是宿主的（peer dependency，桌面端那份在 `app.asar` 里，纯 Node 读不到），Node 解析不到时由 `tools/framework-supply.mjs` 供给本仓库自己钉住的那一份，并在输出里写明用了哪一份 | `install verification passed` |
 
 **差分测试用的是"移植来源"的那份 Python，不是上游脚本。** 它证明的是**本仓库的 TypeScript 编译器与
 我们当初移植它的那份 Python 实现逐字节一致** —— 一个防止移植过程悄悄漂移的回归锁。它**不能**证明与
@@ -191,6 +192,7 @@ pnpm verify:install desktop     # 需要先把这个插件装进 desktop profile
 | 5 | **不做自动质检** | 这是刻意的：上游那套 14 门禁的视觉 QA 会判一张用户自己满意的图 FAIL。要不要重画，由你决定 |
 | 6 | 没有客户端 UI | 只有工具面与一个只读状态路由；交付靠会话自带的交付卡片 |
 | 7 | 交付卡片是**文件卡**，不是内联大图 | 想让它直接在对话里铺开像素，需要给插件加一个客户端半边（向 `tool.call.toolview` 注册 `whalechan_image`），目前没有做 |
+| 8 | **15 张参考图的授权状态是未闭合的** | 上游 2026-10-07 起明确把图片排除在 MIT 与 CC 之外，并声明图片的再分发与"送往图像生成服务"需要相关权利人许可；作者本人只授权了 README 与 Skills 文档的改编整理。本仓库按非商业方式再分发、逐字节未改、署名保留，并承诺权利人要求即撤下 —— 详见 `THIRD-PARTY-NOTICES.md` §1 |
 
 ## 7. 目录结构
 
@@ -202,7 +204,7 @@ src/tools/      唯一那个工具
 src/routes.ts   只读状态路由
 test/           单元测试 + 与移植来源 Python 实现的差分测试
 tools/          七条闸门与一把尺子
-vendor/         上游冻结的一小部分：目录 + 15 张参考图（见 THIRD-PARTY-NOTICES.md）
+vendor/         上游冻结的一小部分：目录 + 15 张参考图（授权范围分三种，见 THIRD-PARTY-NOTICES.md §1）
 ```
 
 ## 8. 来源与许可
@@ -211,15 +213,17 @@ vendor/         上游冻结的一小部分：目录 + 15 张参考图（见 THI
 
 | 覆盖范围 | 许可 | 文件 |
 | --- | --- | --- |
-| 本插件原创代码（`src/` 除 `domain/prompt/character.ts` 与 `domain/compose.ts`、`test/`、`tools/`、构建配置与文档） | MIT | [`LICENSE`](LICENSE) |
-| 再分发的上游文件 + 由上游规范派生的 prompt 编译器 | CC BY-NC-SA 4.0 | [`LICENSE-CC-BY-NC-SA-4.0.md`](LICENSE-CC-BY-NC-SA-4.0.md) |
+| 本插件原创代码（`src/` 除 `domain/prompt/character.ts`、`test/`、`tools/`、构建配置与文档） | MIT | [`LICENSE`](LICENSE) |
+| `domain/compose.ts` 里逐字引用的三条上游常量 | 上游**以 MIT 授权其代码常量**，故仍为 MIT | 同左 |
+| 由上游规范派生的 prompt 编译器 + 上游目录元数据 `reference-catalog.json` | CC BY-NC-SA 4.0 | [`LICENSE-CC-BY-NC-SA-4.0.md`](LICENSE-CC-BY-NC-SA-4.0.md) |
+| `vendor/` 里那 15 张参考图 | **不在上游 blanket 授权内**（见下方来源表与 NOTICES §1） | —— |
 
 **整个仓库及其再分发内容均不得用于商业用途**（NC），且再分发必须署名并以相同协议共享（BY / SA）。
 完整的第三方声明与逐文件 sha256 清单见 [`THIRD-PARTY-NOTICES.md`](THIRD-PARTY-NOTICES.md)。
 
 | 来源 | 关系 |
 | --- | --- |
-| [Neko3000/deepseek-whalechan](https://github.com/Neko3000/deepseek-whalechan) | 上游角色规范。`vendor/whalechan-image-character/` 是它**冻结的一小部分**：`reference-catalog.json` + 15 张参考图（**与上游逐字节相同**，见 `THIRD-PARTY-NOTICES.md` 的摘要）。prompt 编译器**不是**上游代码的移植 —— 上游角色侧没有编译器（那边由 agent 读规范文档组装），我们这层是按它 `references/character-spec.md`、`form-profiles.md` 写的确定性实现，并逐字引用了它 `manage-run.py` 里的三条 canonical 常量。上游 README 声明代码 MIT、规范文档与 Skills 模板 CC-BY-NC-SA 4.0，而**仓库根目录并没有 LICENSE 文件**（那个 MIT 链接是死链）—— 所以本仓库按 CC-BY-NC-SA 4.0 再分发，同时正在向上游申请明确授权（见 `THIRD-PARTY-NOTICES.md` 的授权状态一节） |
+| [Neko3000/deepseek-whalechan](https://github.com/Neko3000/deepseek-whalechan) | 上游角色规范。`vendor/whalechan-image-character/` 是它**冻结的一小部分**：`reference-catalog.json` + 15 张参考图（**与上游 commit `4ad216fc…` 逐字节相同**，见 `THIRD-PARTY-NOTICES.md` 的摘要）。prompt 编译器**不是**上游代码的移植 —— 上游角色侧没有编译器（那边由 agent 读规范文档组装），我们这层是按它 `references/character-spec.md`、`form-profiles.md` 写的确定性实现，并逐字引用了它 `manage-run.py` 里的三条 canonical 常量。**上游已于 2026-10-07 补上许可证**（`LICENSE` MIT / `LICENSE-CC-BY-NC-SA-4.0` / 它自己的 `THIRD-PARTY-NOTICES.md`），并明确三层范围：代码与代码常量 MIT、规范文档与 JSON 目录元数据 CC-BY-NC-SA 4.0、**图片不在任何 blanket 授权内**。作者本人已于同日回复授权（[issue #3](https://github.com/Neko3000/deepseek-whalechan/issues/3#issuecomment-6040420103)），但**授权的范围以上游自己的记录为准** —— 详见 `THIRD-PARTY-NOTICES.md` §1 |
 | B站 [ZipZipPipe](https://space.bilibili.com/4168597) / [上善无形](https://space.bilibili.com/4456176) | 上游 README 声明"部分已知核心形象设定与二创素材"的原始著作权归这两位创作者。本插件不含其原始作品，但再分发的参考图源自包含其贡献的设定体系 |
 | [dickpy/dsh-imagegen](https://github.com/dickpy/dsh-imagegen) | 运行时对端（Apache-2.0）。插件只通过 loopback HTTP 调它的路由，**不含也不改它的代码**，因此不是衍生作品 |
 | 本插件自身 | 编排层、工具面、计划闸门、交付接缝、差分测试与七条闸门是原创（TypeScript） |

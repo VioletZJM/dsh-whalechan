@@ -19,6 +19,11 @@
  * Free and offline: nothing here sends a request. The paid path is exercised once, by
  * a human, on purpose.
  *
+ * The framework packages are the host's (they are peer dependencies, and on the desktop
+ * host they live inside `app.asar`). When plain Node cannot reach them, this gate
+ * supplies this repository's own pinned copy through `tools/framework-supply.mjs` and
+ * says so in its output, rather than reporting a broken install that does not exist.
+ *
  * Usage:
  *     node tools/verify-install.mjs [profile]      # default profile: desktop
  */
@@ -81,17 +86,68 @@ async function main() {
   )
   check(installedVersion === builtVersion, `installed v${installedVersion} vs checkout v${builtVersion}`)
 
-  // 2. Which framework copy does the installed plugin resolve? It must be the host's,
-  //    reached by walking up out of the plugin — never a nested copy of its own.
+  // 2. Which framework copy does the installed plugin resolve? A plugin must never
+  //    carry its own copy of the framework: a `link:` install made it resolve
+  //    `@deepseek-ai/dsh-tools` from the development checkout, putting two copies of
+  //    the framework in one host process.
+  //
+  //    Measured 2026-10-10, and the reason this is not a one-line assertion any more:
+  //    when the host supplies the peer framework itself, plain Node **cannot** resolve
+  //    the specifier at all — the desktop runtime owns it, the installed plugin has no
+  //    `node_modules`, and the copies under `~/.dsh/profiles/node_modules` are stale
+  //    junctions into a development tree that has since been deleted. The plugin still
+  //    mounts, with `delivery: true`, in the live host. So "unresolvable" is the
+  //    host-provided case, not a broken install; the previous version of this gate
+  //    passed only because that development tree happened to still exist, and turned
+  //    red the moment it was cleaned — a failure with no defect behind it.
+  //
+  //    Both branches therefore assert something real:
+  //      - resolvable   -> it must not live inside the plugin (the `link:` signature);
+  //      - unresolvable -> the manifest must declare the peer, and the plugin must not
+  //        ship a nested `node_modules` that could shadow it.
   const resolveFrom = createRequire(ENTRY)
-  const framework = resolveFrom.resolve('@deepseek-ai/dsh-tools')
-  const nested = framework.startsWith(INSTALLED)
-  check(
-    !nested,
-    `the installed plugin resolves @deepseek-ai/dsh-tools from inside itself (${framework}). That is what a `
-      + '`link:` install does, and it puts two copies of the framework in one host process.',
-  )
-  const frameworkVersion = versionOf(join(dirname(framework), '..', 'package.json'))
+  let framework = ''
+  try {
+    framework = resolveFrom.resolve('@deepseek-ai/dsh-tools')
+  } catch {
+    framework = ''
+  }
+  const installedManifest = JSON.parse(readFileSync(join(INSTALLED, 'package.json'), 'utf8'))
+  const nestedModules = join(INSTALLED, 'node_modules')
+  let frameworkNote
+  if (framework !== '') {
+    check(
+      !framework.startsWith(INSTALLED),
+      `the installed plugin resolves @deepseek-ai/dsh-tools from inside itself (${framework}). That is what a `
+        + '`link:` install does, and it puts two copies of the framework in one host process.',
+    )
+    frameworkNote = `@deepseek-ai/dsh-tools ${versionOf(join(dirname(framework), '..', 'package.json'))} `
+      + `resolved from ${framework}, not from inside the plugin`
+  } else {
+    check(
+      installedManifest.peerDependencies?.['@deepseek-ai/dsh-tools'] !== undefined,
+      'the installed plugin neither resolves @deepseek-ai/dsh-tools nor declares it as a peer dependency: '
+        + 'nothing supplies it, so every import of it fails',
+    )
+    check(
+      !existsSync(nestedModules),
+      `the installed plugin ships its own node_modules (${nestedModules}) at the same time as the framework is `
+        + 'unresolvable from Node — that nested copy is what a `link:` install shadows the host with',
+    )
+    // Supply the host-owned peer ourselves, so the mount and dry-run assertions below
+    // still run. See tools/framework-supply.mjs for why this is not a workaround.
+    const supply = join(REPO_ROOT, 'tools', 'framework-supply.mjs')
+    check(
+      existsSync(supply),
+      `the framework is unresolvable from Node and ${supply} is missing, so this gate cannot import the `
+        + 'installed bundle at all',
+    )
+    const { register } = await import('node:module')
+    register('./framework-supply.mjs', import.meta.url)
+    frameworkNote = '@deepseek-ai/dsh-tools is the host\'s; this gate supplies this repository\'s '
+      + 'devDependency copy via tools/framework-supply.mjs (the host copy lives inside app.asar, '
+      + 'which plain Node cannot read)'
+  }
 
   // 3. Mount it, the way the host mounts it, and count what it registers.
   const bundle = await import(pathToFileURL(ENTRY).href)
@@ -263,7 +319,7 @@ async function main() {
     `install verification passed (profile "${PROFILE}")\n`
       + `  installed   ${INSTALLED}\n`
       + `  build       v${installedVersion}, lib ${installedSha.slice(0, 16)}… (identical to this checkout)\n`
-      + `  framework   @deepseek-ai/dsh-tools ${frameworkVersion} resolved from the host, not from the plugin\n`
+      + `  framework   ${frameworkNote}\n`
       + `  surface     ${definitions[0].name} (${schemaBytes} bytes on every request)\n`
       + `  dry run     ${plan.plan_id.slice(0, 16)}… (${plan.prompt.length} characters, ${plan.form}, ${plan.size})\n`
       + `  head count  "3头身" compiles to ${/Proportion: [\d.]+ heads/.exec(counted.prompt)?.[0] ?? '(missing)'}\n`

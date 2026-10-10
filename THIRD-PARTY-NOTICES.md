@@ -14,7 +14,7 @@
 
 ---
 
-## 1. DeepSeek Whale-chan Project（上游）
+## 1. DeepSeek Whale-chan（上游）
 
 - 仓库：<https://github.com/Neko3000/deepseek-whalechan>
 - 作者：Neko3000（Xueliang Chen）
@@ -35,14 +35,43 @@
   所以本插件的 `src/domain/prompt/character.ts` **不是上游代码的移植**，而是按上述规范写的确定性实现。
   同理，`test/character-prompt.test.ts` 的差分测试对照的是**本项目的移植来源 Python 实现**，
   不是上游脚本 —— 它防的是移植漂移，不是"与上游一致"。
-- 上游的许可声明（逐字引自上游 `README.zh.md`）：
-  - **开源代码与工具链**采用 MIT License（注：上游仓库根目录**没有** `LICENSE` 文件，该链接目前是死链）；
-  - **规范文档与 Skills 模版**（角色规范白皮书、提示词模板、分镜规则、Skill 配置）采用 CC-BY-NC-SA 4.0；
-  - 「任何商业性使用，商业出版或盈利性衍生品开发，必须获得相关原始著作权人及相关品牌权利方的明确书面授权。」
-  - 引用或基于本项目规则生成的内容，建议注明出处为 `DeepSeek Whale-chan Project`。
-- **授权状态（截至本提交）**：尚未收到上游的书面授权，也尚未向"公开"发布 —— 本仓库目前是**私有**的，
-  并且正在向上游提交授权申请。在收到明确书面授权之前，这些内容的再分发依据是上游的 **CC-BY-NC-SA 4.0**
-  条款（署名 + 相同方式共享 + 非商业），本节在收到授权后会补上授权链接与范围。
+- **上游的许可（2026-10-07 起）**：上游在同一天补上了三份文件并写清了三层范围
+  （`ea972d7 docs(license): add licenses and clarify content scopes`，PR #5；
+  `422f8e8 docs(readme): fix navigation and license links`，PR #6）：
+  1. **MIT** —— `skills/*/scripts/`、`skills/*/tests/` 里的项目原创代码，**含代码常量**
+     （上游 `LICENSE`：`Copyright (c) 2026 Neko3000 and contributors`）。上游过去那个指向
+     `LICENSE` 的死链，现在有文件了。
+  2. **CC BY-NC-SA 4.0** —— 项目原创的 README 文字、`skills/*/SKILL.md`、Markdown 规范与
+     提示词/版式模板、`skills/*/agents/` 配置，以及 `skills/*/references/` 里的
+     **JSON 规范 / 目录元数据**。
+  3. **图片与其他第三方素材：不在以上任何 blanket 授权之内。** 上游写明
+     "Catalog metadata does not license the images it describes"，也写明仓库**没有记录
+     每张图的原始作者、原始发布地址与再分发/再许可许可**，并写道 "Attribution alone does
+     not authorize copying, redistribution, modification, or submission to an
+     image-generation service"。
+  4. 署名：上游新 README 建议注明出处为 `DeepSeek Whale-chan`（**不带** "Project" 后缀）。
+- **授权记录（已收到）**：<https://github.com/Neko3000/deepseek-whalechan/issues/3#issuecomment-6040420103>，
+  作者本人（`author_association: OWNER`）于 **2026-10-07 22:44（+0800）** 回复，关键句原文：
+
+  > 我在此正式授权基于本仓库 README 与 Skills 文档改编/整理内容。
+
+  同一回复中，作者要求本项目的署名不带 "Project" 后缀（用 `DeepSeek Whale-chan` 或
+  `DeepSeek Whalechan`）—— 上游新 README 现在也这么建议。
+
+  **这份授权的范围以上游自己的记录为准。** 上游 `THIRD-PARTY-NOTICES.md` 的
+  "DSH integration permission record" 一节把本 issue 记为：支持本项目集成，并**明确授权
+  README 与 Skills 文档的改编/整理**；同时逐字写道：
+
+  > It is not a blanket grant of third-party rights. Redistribution of images and
+  > transmission to image-generation services require permissions covering those
+  > uses from the relevant rights holders.
+- **因此本仓库对三类内容的依据是分开的**（不要把它们当成同一种）：
+
+  | 内容 | 本仓库的依据 |
+  | --- | --- |
+  | `src/domain/compose.ts` 里逐字引用的三条常量 | 上游**以 MIT 授权其代码常量**，故按 MIT 处理 |
+  | `src/domain/prompt/character.ts`（按上游规范改写）、`reference-catalog.json`（上游目录元数据） | 上游的 **CC BY-NC-SA 4.0**：非商业 + 署名 + 相同方式共享 |
+  | `vendor/.../assets/reference-images/**` 那 15 张 webp | **上游没有给出 blanket 授权，并把这一用途明确排除在外。** 本仓库在收到作者"请推进"的回复后，以**非商业**方式再分发这 15 张图（逐字节未改、署名保留），并承诺**作者或相关权利人一旦要求即无条件撤下**。若你要把它们用于商业用途、或送往图像生成服务，请自行向相关权利人取得许可 —— 本仓库不能代授 |
 
 ## 2. 角色形象与二创著作权归属（上游声明的第三方）
 
@@ -54,6 +83,10 @@
 
 鲸鱼娘形象的诞生、演进与传播基于广大网友的集体创作。本插件不包含上述创作者的原始作品，但再分发的参考图
 源自包含其贡献的角色设定体系，因此这一归属声明必须随本仓库一同保留。上游同时要求关注「其他任何创作者的权利」。
+
+上游自己的 `THIRD-PARTY-NOTICES.md` 对这类链接给了一句更严格的说明，我们照抄它的口径：**这些是署名，
+不是许可证据**；上游也没有记录图片与原始作者、原始发布地址之间的逐图对应关系，所以**不要从文件名或哈希
+去推断任何授权**。署名本身不构成复制、再分发、修改或送往图像生成服务的授权。
 
 ## 3. 运行时依赖（本插件不包含其代码）
 
@@ -91,7 +124,9 @@
 | `vendor/whalechan-image-character/assets/reference-images/super-deformed/0081_stranded_on_floor_rendered_isolated.webp` | 71780 | `f968de20110f6a8830172e7899f5529a8f1331c587f4cfd72b3ddd6059d6a869` |
 | `vendor/whalechan-image-character/references/reference-catalog.json` | 5579 | `61a449f92f74bc67a5d2f997c75fb4c90776230bbd06d0f90abe4e407fe38346` |
 
-整树摘要（`vendor/PROVENANCE.json` 记录的口径）：`8e9a018d50ab2220c0140048ce50f00f225a6e4b08bf1be7cbb0c722bc7e6ac4`
+本 vendor 树的摘要（口径见 `vendor/PROVENANCE.json` 的 `covers`；路径相对本树根）：`8e9a018d50ab2220c0140048ce50f00f225a6e4b08bf1be7cbb0c722bc7e6ac4`
 
-上游对应位置：`skills/whalechan-image-character/`（源头 `../dsh-whalechan/.dsh/skills/whalechan-image-character`）。
+`vendor/PROVENANCE.json` 自身的摘要（对上面这些记录再哈希一次，动任何一处都会变）：`490863ea1862c79d28790e8acb0862c5551f6ac5e7974144d468e430e3574b90`
+
+上游对应位置：`skills/whalechan-image-character/`（本机冻结来源：`../dsh-whalechan/.dsh/skills/whalechan-image-character`）。
 <!-- vendored-files:end -->
