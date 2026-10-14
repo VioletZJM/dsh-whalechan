@@ -265,7 +265,8 @@ export function renderImage(value: ImageToolValue): string {
  * @param args - the tool call's arguments.
  * @param deps - injected host access.
  * @param exec - the executing call, handed to the delivery seam untouched; omitted
- *   (as a dry run, or in a test) it simply means nothing can be delivered.
+ *   (as a dry run, or under a host with no delivery seam) it simply means nothing
+ *   can be delivered.
  * @returns the plan, or the delivered files.
  */
 export async function imageRun(

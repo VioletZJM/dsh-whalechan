@@ -5,9 +5,9 @@
  * Why mirror: that plugin re-exports its internals only "for smoke tests and
  * host-side debugging", and its package README states the plugin contract is
  * just `name / inject / Config / apply`. Importing `engine.ts` would couple two
- * independently versioned packages. Instead the rules are pinned by tests, so
- * upstream drift surfaces as a failing test rather than as a silently wrong
- * request.
+ * independently versioned packages. The price is that these rules are a copy: when
+ * dsh-imagegen adds or renames a model, check them by hand against its catalogue,
+ * because nothing here can notice on its own.
  */
 
 /** The protocol families this plugin knows how to shape a request for. */

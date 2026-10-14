@@ -5,13 +5,14 @@
 #
 # Text is stored and checked out as LF on every platform. Without this, a Windows
 # clone (core.autocrlf=true) would materialize CRLF in the working copy, and the
-# tests that read src/ files as text — and the build's own output — would then
-# differ between machines.
+# build output committed to this repository (lib/index.js) would then differ
+# byte-for-byte between machines — the artifact users install is the file in git,
+# so its bytes have to be the same ones everyone gets.
 * text=auto eol=lf
 
-# The vendored tree is hashed (tools/vendor-skills.ts, vendor/PROVENANCE.json) and
-# listed file-by-file with its sha256 in THIRD-PARTY-NOTICES.md, where
-# tools/verify-notices.mjs --check fails if those bytes change.
+# The vendored tree is hashed into vendor/PROVENANCE.json and listed file-by-file
+# with its sha256 in THIRD-PARTY-NOTICES.md section 4, so its bytes are a recorded
+# fact rather than a convention.
 # vendor/whalechan-image-character/references/reference-catalog.json carries CRLF,
 # written that way by the upstream Python tool that produced it, and the recorded
 # digest covers exactly those bytes. So this subtree is declared "never touch my

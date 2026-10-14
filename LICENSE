@@ -3,7 +3,8 @@ MIT License
 Copyright (c) 2026 Ming (VioletZJM)
 
 This license covers the ORIGINAL work in this repository only: the plugin's own
-source (src/, test/, tools/), its build configuration and its documentation.
+source (src/), its build configuration, its built output (lib/) and its
+documentation.
 
 It does NOT cover the parts of this repository that come from, or are derived
 from, the upstream project DeepSeek Whale-chan

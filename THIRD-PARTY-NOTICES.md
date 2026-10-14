@@ -7,7 +7,7 @@
 
 | 覆盖范围 | 许可 | 文件 |
 | --- | --- | --- |
-| 本插件原创代码（`src/` 除下列两处、`test/`、`tools/`、构建配置与文档） | MIT | [`LICENSE`](LICENSE) |
+| 本插件原创代码（`src/` 除下列两处、构建配置与文档） | MIT | [`LICENSE`](LICENSE) |
 | 再分发的上游内容与由上游规范派生的部分 | CC BY-NC-SA 4.0 | [`LICENSE-CC-BY-NC-SA-4.0.md`](LICENSE-CC-BY-NC-SA-4.0.md) |
 
 **整个仓库及其再分发内容均不得用于商业用途。**
@@ -33,8 +33,7 @@
 - **我们这里没有什么：** 上游角色侧**没有 prompt 编译器**（角色 prompt 由 agent 读规范自行组装；
   上游只有漫画侧有 `skills/whalechan-image-comic/scripts/build-prompt.py`，文案与角色侧不同）。
   所以本插件的 `src/domain/prompt/character.ts` **不是上游代码的移植**，而是按上述规范写的确定性实现。
-  同理，`test/character-prompt.test.ts` 的差分测试对照的是**本项目的移植来源 Python 实现**，
-  不是上游脚本 —— 它防的是移植漂移，不是"与上游一致"。
+  这段关系只写了这一次，本仓库的编译产物就建立在它之上。
 - **上游的许可（2026-10-07 起）**：上游在同一天补上了三份文件并写清了三层范围
   （`ea972d7 docs(license): add licenses and clarify content scopes`，PR #5；
   `422f8e8 docs(readme): fix navigation and license links`，PR #6）：
@@ -97,13 +96,14 @@
 本插件调用的图像渠道由用户自行配置，产生的费用由用户自付；插件在花钱之前会把将要发送的完整 prompt 与
 模型/尺寸交给用户确认。
 
-## 4. 再分发的文件清单（自动生成，请勿手改）
+## 4. 再分发的文件清单（冻结记录）
 
-由 `node tools/verify-notices.mjs` 依据 `vendor/PROVENANCE.json` 与 `vendor/` 目录实际内容生成，
-`node tools/verify-notices.mjs --check` 会断言它与仓库现状一致。
+本节是**冻结记录**，不是生成物：16 个文件的字节数与 SHA-256 取自 `vendor/PROVENANCE.json`，
+两者必须一一对应。复核不依赖本仓库的任何脚本 —— 对 `vendor/` 下这 16 个文件逐个算 SHA-256
+与本表比对即可；也可以用 `lib/index.js` 导出的 `treeDigest` / `readProvenance` 重算整树摘要。
 
 <!-- vendored-files:begin -->
-再分发文件共 **16** 个，合计 **1464597** 字节。清单与摘要由 `tools/verify-notices.mjs` 生成。
+再分发文件共 **16** 个，合计 **1464597** 字节。
 
 | 文件 | 字节 | SHA-256 |
 | --- | ---: | --- |

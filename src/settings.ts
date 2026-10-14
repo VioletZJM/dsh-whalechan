@@ -5,7 +5,7 @@
  * nothing reads is worse than a missing one: the user flips it, nothing happens, and
  * the honest conclusion is that the plugin is broken. `announceToAgent` sat here for
  * three versions doing exactly that — declared, defaulted, and referenced by no line
- * of code. `test/settings.test.ts` now refuses a field that is not read somewhere.
+ * of code. So: **add a field only together with the line that reads it.**
  *
  * Values arrive from the composition entry (the profile's `cordis.patch.yml`) or from
  * the host's settings store; the schema is what the host renders, so it is the only

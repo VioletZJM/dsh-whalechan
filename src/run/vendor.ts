@@ -8,9 +8,10 @@
  *
  * Freezing a copy creates its own hazard, though — the copy can silently drift
  * from the original. So every vendor tree carries a **digest over its exact file
- * set and contents**, recorded in `vendor/PROVENANCE.json`, and the test suite
- * recomputes it. Editing a vendored file by hand, or re-vendoring from a
- * different source, cannot pass unnoticed.
+ * set and contents**, recorded in `vendor/PROVENANCE.json` and, per file, in
+ * `THIRD-PARTY-NOTICES.md`. `treeDigest` below recomputes it, so editing a
+ * vendored file by hand, or re-vendoring from a different source, is a thing a
+ * reader can detect rather than a thing we promise does not happen.
  */
 import { createHash } from 'node:crypto'
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'

@@ -32,7 +32,11 @@ export const name = 'whalechan'
 /** Services required before the tool surface can mount. */
 export const inject = ['tools']
 
-/** Internals re-exported for tests and host-side debugging. */
+/**
+ * Internals re-exported so the plugin can be inspected from outside the host
+ * process — the same reason the status route exists. `lib/index.js` is a plain
+ * ESM module: `import()` it and read the compiler's behaviour without a session.
+ */
 export { channelReport, deliverableRatios, geometryTable, ratioOf, resolveGeometry, type ChannelReport, type Geometry } from './domain/geometry.ts'
 export { channelFamily, promptLimit, type ChannelFamily } from './domain/family.ts'
 export { WhalechanError, classifyEndpointError, classifyHttp, SAFETY_HINTS, type ErrorCategory } from './domain/errors.ts'

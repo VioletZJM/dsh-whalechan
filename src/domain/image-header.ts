@@ -8,8 +8,7 @@
  *
  * Reading a header is not an image operation — nothing is decoded, resampled, or
  * measured — so doing it here removes that dependency from the plan path without
- * weakening the rule that pixel work belongs to Pillow (D1). It is also verifiable
- * against Pillow, which is what `test/image-header.test.ts` does.
+ * weakening the rule that pixel work belongs to Pillow (D1).
  *
  * Only the container headers are parsed: PNG `IHDR`, JPEG `SOF`, the three WEBP
  * chunk layouts, and the GIF screen descriptor. Everything else is refused by

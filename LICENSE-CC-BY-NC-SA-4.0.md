@@ -29,9 +29,10 @@ Taken from upstream as well, but **not** under this licence:
   section 1.
 
 The exact file list, byte sizes and SHA-256 digests of everything redistributed are
-generated into `THIRD-PARTY-NOTICES.md` by `tools/verify-notices.mjs`, and the
-provenance digests are checked by the `vendor:check` gate. Nothing about the
-redistribution surface is maintained by hand.
+recorded in `THIRD-PARTY-NOTICES.md` section 4, generated once from the tree and
+frozen there. It can be re-checked without any tool from this repository: hash the
+files under `vendor/` and compare, or recompute the tree digest with the
+`treeDigest` / `readProvenance` exports of `lib/index.js`.
 
 ## The licence
 
@@ -79,11 +80,8 @@ That is a real option, and the plugin is structured so it is a *deletion* rather
 than a rewrite: `src/run/vendor.ts` owns the vendored tree, and the compiler is one
 module behind one function. What it costs is the character's calibrated look —
 **not** an upstream differential test, because upstream has no character-side
-compiler to differ from. Our own differential test
-(`test/character-prompt.test.ts`) pins the TypeScript compiler against the Python
-implementation this project was ported *from*, which is also ours. The three
-quoted constants do not block a commercial fork at all: upstream licenses them
-under MIT.
+compiler to differ from. The three quoted constants do not block a commercial fork
+at all: upstream licenses them under MIT.
 
 ## Non-official
 

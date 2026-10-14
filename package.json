@@ -1,7 +1,7 @@
 {
   "name": "dsh-whalechan",
   "version": "0.5.0",
-  "description": "DeepSeek Harness plugin: draw identity-locked Whale-chan illustrations from a plain description, with the prompt and the cost shown before anything is spent.",
+  "description": "DeepSeek Harness 插件：说一句场景，画一张鲸鱼娘。花钱之前先给你看 prompt 和报价。",
   "type": "module",
   "author": "Ming (VioletZJM)",
   "repository": {
@@ -24,7 +24,6 @@
   },
   "files": [
     "lib",
-    "src",
     "vendor",
     "cordis.patch.yml",
     "README.md",
@@ -34,15 +33,7 @@
   ],
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "test": "node --test \"test/**/*.test.ts\"",
-    "build": "tsdown",
-    "verify:bundle": "node tools/verify-bundle.mjs",
-    "verify:install": "node tools/verify-install.mjs",
-    "verify:notices": "node tools/verify-notices.mjs --check",
-    "check:exports": "node tools/dead-exports.mjs --check",
-    "vendor": "node tools/vendor-skills.ts",
-    "vendor:check": "node tools/vendor-skills.ts --check",
-    "prepack": "node tools/clean-pycache.mjs"
+    "build": "tsdown"
   },
   "dependencies": {
     "@deepseek-ai/schemastery": "^3.18.4"
