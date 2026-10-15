@@ -15,14 +15,14 @@ DeepSeek Harness 插件：**说一句场景，画一张鲸鱼娘**。
 
 1. 先装 **dsh-imagegen** 插件，在「设置 → 生图配置」里配好渠道和 API Key。本插件只是调用方，
    不碰你的密钥。
-2. 侧边栏打开**「插件」**页，在安装框里填 `github:VioletZJM/dsh-whalechan`，装。
+2. 侧边栏打开**「插件」**页，在安装框里填 `https://github.com/VioletZJM/dsh-whalechan.git`，装。
 3. **重启 DSH。** 插件模块按真实路径缓存，只换磁盘上的文件不会重新加载。
 
 命令行等价（`dsh` 不在 PATH 上时，桌面端自带的那份在
 `/Applications/DeepSeek Harness.app/Contents/Resources/runtime/cli/bin/dsh`）：
 
 ```bash
-dsh plugin --profile desktop add github:VioletZJM/dsh-whalechan
+dsh plugin --profile desktop add https://github.com/VioletZJM/dsh-whalechan.git
 ```
 
 `web` / `tui` 等 profile 把 `desktop` 换掉即可。仓库里带着构建好的 `lib/`，**不需要
